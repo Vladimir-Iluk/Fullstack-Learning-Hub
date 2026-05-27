@@ -1,0 +1,118 @@
+
+
+services:
+  # ──────────────────────────────────────────────
+  # PostgreSQL — Relational DB (Users, Orders, Transactions)
+  # Topic #16: SQL + Sequelize
+  # ──────────────────────────────────────────────
+  postgres:
+    image: postgres:15-alpine
+    container_name: lms-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: lms_db
+      POSTGRES_USER: lms_user
+      POSTGRES_PASSWORD: lms_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lms_user -d lms_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ──────────────────────────────────────────────
+  # MongoDB — NoSQL DB (Courses, ActivityLogs)
+  # Topic #17: NoSQL + Mongoose
+  # ──────────────────────────────────────────────
+  mongodb:
+    image: mongo:6.0
+    container_name: lms-mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodata:/data/db
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh --quiet
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ──────────────────────────────────────────────
+  # Deno Certificate Microservice
+  # Topic #8: Deno
+  # ──────────────────────────────────────────────
+  deno-service:
+    build:
+      context: ./deno-service
+      dockerfile: Dockerfile
+    container_name: lms-deno-service
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+
+  # ──────────────────────────────────────────────
+  # Express.js Backend (API Orchestrator)
+  # Topics #11-14, #18: Node.js, Express, MVC, Auth
+  # ──────────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: lms-backend
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=development
+      - PORT=5000
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=lms_db
+      - DB_USER=lms_user
+      - DB_PASSWORD=lms_password
+      - MONGO_URI=mongodb://mongodb:27017/lms_mongo
+      - DENO_SERVICE_URL=http://deno-service:8000
+      - JWT_SECRET=supersecretjwtkey_lms_2024
+      - JWT_EXPIRES_IN=7d
+      - STRIPE_SECRET_KEY=sk_test_mock_key
+      - FRONTEND_URL=http://localhost:3000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+
+  # ──────────────────────────────────────────────
+  # React Frontend (Vite + TypeScript)
+  # Topics #1-5, #9-10, #15, #19
+  # ──────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: lms-frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - VITE_API_URL=http://localhost:5000
+      - VITE_SOCKET_URL=http://localhost:5000
+      - VITE_DENO_URL=http://localhost:8000
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+volumes:
+  pgdata:
+  mongodata:

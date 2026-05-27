@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Підтвердження замовлення — DevHub LMS</title>
+  <style>
+    /* Topic #13: EJS Template — Email Invoice */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #0f0f23;
+      color: #e2e8f0;
+      padding: 40px 20px;
+    }
+    .email-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: linear-gradient(145deg, #1a1a3e, #16213e);
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(99, 102, 241, 0.3);
+    }
+    .email-header {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      padding: 32px;
+      text-align: center;
+    }
+    .email-header h1 {
+      font-size: 24px;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .email-header p {
+      color: rgba(255,255,255,0.8);
+      font-size: 14px;
+    }
+    .email-body {
+      padding: 32px;
+    }
+    .greeting {
+      font-size: 18px;
+      margin-bottom: 20px;
+      color: #c4b5fd;
+    }
+    .order-details {
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+    }
+    .detail-row:last-child { border-bottom: none; }
+    .detail-label { color: #94a3b8; font-size: 14px; }
+    .detail-value { color: #e2e8f0; font-weight: 600; }
+    .total-row {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 2px solid #6366f1;
+    }
+    .total-row .detail-value {
+      color: #a78bfa;
+      font-size: 20px;
+    }
+    .cta-button {
+      display: inline-block;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: #fff;
+      text-decoration: none;
+      padding: 14px 32px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      margin: 24px 0;
+    }
+    .email-footer {
+      text-align: center;
+      padding: 24px;
+      color: #64748b;
+      font-size: 12px;
+      border-top: 1px solid rgba(99, 102, 241, 0.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <div class="email-header">
+      <h1>🎓 DevHub LMS</h1>
+      <p>Підтвердження замовлення</p>
+    </div>
+
+    <div class="email-body">
+      <p class="greeting">Вітаємо, <%= studentName %>! 👋</p>
+      <p style="color: #94a3b8; line-height: 1.6;">
+        Дякуємо за покупку! Ваше замовлення успішно оформлено.
+        Тепер ви маєте доступ до курсу.
+      </p>
+
+      <div class="order-details">
+        <div class="detail-row">
+          <span class="detail-label">📋 Номер замовлення</span>
+          <span class="detail-value"><%= orderId %></span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">📚 Курс</span>
+          <span class="detail-value"><%= courseName %></span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">📅 Дата</span>
+          <span class="detail-value"><%= date %></span>
+        </div>
+        <div class="detail-row total-row">
+          <span class="detail-label">💳 Сума</span>
+          <span class="detail-value"><%= amount %> <%= currency %></span>
+        </div>
+      </div>
+
+      <div style="text-align: center;">
+        <a href="#" class="cta-button">Перейти до навчання →</a>
+      </div>
+    </div>
+
+    <div class="email-footer">
+      <p>© 2024 DevHub LMS. Усі права захищені.</p>
+      <p style="margin-top: 8px;">Цей лист згенеровано автоматично за допомогою шаблонізатора EJS.</p>
+    </div>
+  </div>
+</body>
+</html>
