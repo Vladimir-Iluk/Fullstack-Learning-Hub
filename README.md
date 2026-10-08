@@ -1,9 +1,9 @@
-# 🎓 DevHub LMS — Освітня платформа
+#  DevHub LMS — Освітня платформа
 
 > Fullstack веб-додаток: Learning Management System / Кабінет розробника.
 > Практична демонстрація **21 інженерної теми**.
 
-## 🏗️ Архітектура
+##  Архітектура
 
 ```
 ┌──────────────┐     ┌──────────────┐     ┌──────────────────┐
@@ -22,7 +22,7 @@
                    └────────┘ └───────┘
 ```
 
-## 🚀 Швидкий старт
+##  Швидкий старт
 
 ### Docker Compose (рекомендовано)
 ```bash
@@ -70,7 +70,7 @@ cd backend && npm run seed
 | 20 | Stripe | Імітація checkout session та callback |
 | 21 | Socket.io | Real-time чат підтримки (`/support`) |
 
-## 📂 Структура проєкту
+##  Структура проєкту
 
 ```
 reactproj/
@@ -80,7 +80,7 @@ reactproj/
 └── deno-service/     # Deno certificate microservice
 ```
 
-## 🧪 Тестування
+##  Тестування
 
 ```bash
 # Unit тести (reducer)
